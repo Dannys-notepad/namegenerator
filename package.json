@@ -1,0 +1,17 @@
+{
+  "name": "namegenerator",
+  "version": "1.0.0",
+  "main": "app",
+  "scripts": {
+    "start": "node app",
+    "dev": "node --watch app"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.0"
+  }
+}
