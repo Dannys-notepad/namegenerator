@@ -1,38 +1,40 @@
+const js2xmlparser = require('js2xmlparser')
 
 const xmlResponse = (names, gender) => { 
-  let xml, xmLM, xmLF
+  let xml
   if(gender !== 'both'){
-    xml = `
-      <?xml version="1.0" encoding="UTF-8"?>
-      <names>
-        ${names.map((n) => `
-          <name>
-            <fullname>${n}</fullname>
-          </name>
-        `).join('')}
-      </names>
-    `
-  }else{
-    let nameArray = [names]
-    let nam = nameArray.forEach((n) => {
-      xmLM += `
-        <fullname>${n.maleNames}</fullname> \n
-      `
-      xmLF += `
-        <fullname>${n.femaleNames}</fullname> \n
-      `
+    xml = js2xmlparser.parse('names', {
+      "male-names":{
+        name: names
+      }
+    },{
+      declaration:{
+        include: true,
+        encoding: 'UTF-8'
+      },
+      format: {
+        doubleQuotes: true,
+        indent: ' '
+      }
     })
-    xml = `
-      <?xml version="1.0" encoding="UTF-8"?>
-      <names>
-        <maleNames>
-          ${xmLM}
-        </maleNames>
-        <femaleNames>
-          ${xmLF}
-        </femaleNames>
-      </names>
-    `
+  }else{
+    xml = js2xmlparser.parse('names', {
+      "male-names":{
+        name: names.maleNames
+      },
+      "female-names":{
+        name: names.femaleNames
+      }
+    },{
+      declaration:{
+        include: true,
+        encoding: 'UTF-8'
+      },
+      format: {
+        doubleQuotes: true,
+        indent: ' '
+      }
+    })
   }
   return xml
 }

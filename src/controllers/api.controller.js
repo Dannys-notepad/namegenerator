@@ -46,7 +46,7 @@ const generate = async (req, res) => {
       }else if(gender === 'female'){
         generatedNames = generateFemaleNames(maleNames, femaleNames, limit, format)
       }else if(gender === 'both'){
-        generatedNames = {maleNames: generateMaleNames(maleNames, (limit/2)*2, format), femaleNames: generateFemaleNames(maleNames, femaleNames, limit, format)}
+        generatedNames = {maleNames: generateMaleNames(maleNames, limit*2, format), femaleNames: generateFemaleNames(maleNames, femaleNames, limit, format)}
       }else{
         response = {msg: 'gender values can only be set to male, female or both'}
         statusCode = 400
