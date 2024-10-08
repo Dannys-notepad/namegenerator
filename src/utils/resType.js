@@ -39,12 +39,17 @@ const xmlResponse = (names, gender) => {
   return xml
 }
 
-let currencyTxt = (cur) => {
-  const curren = cur.map((c) => {
-    return `${c.id} : ${c.name} : ${c.abbrev} :${c.symbol} : ${c.imgurl}`
-  }).join('\n')
+let txtResponse = (names, gender) => {
+  let name
+  if(gender !== 'both'){
+    name = names.map((n) => {
+      return `${n}`
+    }).join('\n')
+  }
+  return name
 }
 
 module.exports = {
-  xmlResponse
+  xmlResponse,
+  txtResponse
 }

@@ -1,10 +1,11 @@
 const db = require('../data/names.db.json')
 const { shuffle, generateMaleNames, generateFemaleNames } = require('../utils/generateNames.js')
-const { xmlResponse } = require('../utils/resType.js')
+const { xmlResponse, txtResponse } = require('../utils/resType.js')
 
 
 const generate = async (req, res) => {
   let query = await req.query
+  let type = 'application/json'
   let response
   let statusCode = 200
   
@@ -12,7 +13,7 @@ const generate = async (req, res) => {
   let femaleNames = shuffle(db[0].femaleNames)
   
   if(query.mode === 'auto'){
-    response = {maleNames: generateMaleNames(name, 10, 'fl'), femaleNames: generateFemaleNames(name, name1, 5, 'fl')}
+    response = {maleNames: generateMaleNames(maleNames, 10, 'fl'), femaleNames: generateFemaleNames(maleNames, femaleNames, 5, 'fl')}
   }else if(query.mode === 'custom'){
     let limit, format, restype, gender
     let generatedNames
@@ -56,16 +57,19 @@ const generate = async (req, res) => {
       statusCode = 400
     }
     
+
     if(query.restype !== undefined && !parseInt(query.restype)){
       restype = query.restype
       if(restype === 'xml'){
         response = xmlResponse(generatedNames, gender)
+        type = 'application/xml'
       }else if (restype === 'json'){
         response = {names: generatedNames}
       }else if(restype === 'plaintext'){
-        
+        response = txtResponse(generatedNames, gender)
+        type = 'text/plain'
       }else{
-        response = {msg: 'restype can not be set to other values other than xml, json or plain'}
+        response = {msg: 'restype can not be set to other values other than xml, json or plaintext'}
       }
     }else{
       response = {msg: 'the restype parameter takes only string values and must be defined, check API documentation for more info'}
@@ -76,7 +80,7 @@ const generate = async (req, res) => {
     response = {msg: 'The option specified is not recognized, the valid options are auto and custom, check the API documentation for more info'}
     statusCode = 400
   }
-  res.status(statusCode).send(response)
+  res.setHeader('Content-Type', type).status(statusCode).send(response)
 }
 
 module.exports = generate
